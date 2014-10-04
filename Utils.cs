@@ -71,6 +71,10 @@ namespace iPeerLib {
 			return String.Format("{0}{1}", prefix, _return.Replace("-", ""));
 		}
 
+		public static T ParseEnum<T>(string value) {
+			return (T)Enum.Parse(typeof(T), value, true);
+		}
+
 	}
 }
 
