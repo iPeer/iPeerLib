@@ -9,9 +9,12 @@ namespace iPeerLib {
 		public static Dictionary<int, string> preferredSkins = new Dictionary<int, string>() {
 
 			{ 0, "GameSkin(Clone)" },
-			{ 1, "GameSkin" }
+			{ 1, "GameSkin" },
+			{ 2, "Unity" }
 
 		};
+
+		public static int CURRENT_SKIN_INDEX = -1;
 
 		public static Dictionary<int, GUISkin> getSkinList() {
 
@@ -36,19 +39,38 @@ namespace iPeerLib {
 		}
 
 		public static GUISkin getBestAvailableSkin() {
-
+			#if DEBUG
+			Log("Current skin index is " + CURRENT_SKIN_INDEX);
+			#endif
+			if (CURRENT_SKIN_INDEX > -1 && CURRENT_SKIN_INDEX < getSkinList().Count)
+				return getSkinList()[CURRENT_SKIN_INDEX];
 			int id = -1;
 			int x = 0;
 			GUISkin _skin = null;
 			while (id == -1 && x < getSkinList().Count) {
 				_skin = getSkinList()[x];
-				id = getSkinIDForName(_skin.name);
 				x++;
+				if (isPreferredSkin(_skin))
+					id = getSkinIDForName(_skin.name);
 			}
-			if (id > -1 && _skin != null)
+			if (id > -1 && _skin != null) {
+				CURRENT_SKIN_INDEX = id;
+				#if DEBUG
+				Log("New skin index is " + id);
+				#endif
 				return _skin;
+			}
 			else
 				return HighLogic.Skin;
+
+		}
+
+		public static bool isPreferredSkin(GUISkin _skin) {
+
+			for (int i = 0; i < preferredSkins.Count; i++)
+				if (preferredSkins[i] == _skin.name)
+					return true;
+			return false;
 
 		}
 
@@ -73,6 +95,12 @@ namespace iPeerLib {
 
 		public static T ParseEnum<T>(string value) {
 			return (T)Enum.Parse(typeof(T), value, true);
+		}
+
+		private static void Log(object msg) {
+
+			PDebug.Log("[iPeerLib]: " + msg.ToString());
+
 		}
 
 	}
