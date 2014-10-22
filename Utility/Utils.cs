@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace iPeerLib {
+namespace iPeerLib.Utility {
 	public class Utils {
 
 		// Some modded installs edit or add skins, these are the skins we prefer to use where available, in order of preference
@@ -97,9 +97,9 @@ namespace iPeerLib {
 			return (T)Enum.Parse(typeof(T), value, true);
 		}
 
-		private static void Log(object msg) {
+		private static void Log(String message) {
 
-			PDebug.Log("[iPeerLib]: " + msg.ToString());
+            Logging.Logger.Log(message);
 
 		}
 
