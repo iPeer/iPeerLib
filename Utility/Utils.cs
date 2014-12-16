@@ -38,7 +38,30 @@ namespace iPeerLib.Utility {
 
 		}
 
-		public static GUISkin getBestAvailableSkin() {
+        public static GUISkin getBestAvailableSkin()
+        {
+#if DEBUG
+            Log("Current skin index is " + CURRENT_SKIN_INDEX);
+#endif
+            if (CURRENT_SKIN_INDEX > -1 && CURRENT_SKIN_INDEX < getSkinList().Count)
+                return getSkinList()[CURRENT_SKIN_INDEX];
+            Dictionary<int,GUISkin> skinList = getSkinList();
+            for (int __skinId = 0; __skinId < preferredSkins.Count; __skinId++)
+            {
+                string skinName = preferredSkins[__skinId];
+                for (int id = 0; id < skinList.Count; id++)
+                {
+                    if (skinList[id].name == skinName)
+                    {
+                        CURRENT_SKIN_INDEX = id;
+                        return skinList[id];
+                    }
+                }
+            }
+            return HighLogic.Skin;
+        }
+
+		/*public static GUISkin getBestAvailableSkin() {
 			#if DEBUG
 			Log("Current skin index is " + CURRENT_SKIN_INDEX);
 			#endif
@@ -63,7 +86,7 @@ namespace iPeerLib.Utility {
 			else
 				return HighLogic.Skin;
 
-		}
+		}*/
 
 		public static bool isPreferredSkin(GUISkin _skin) {
 
@@ -102,6 +125,16 @@ namespace iPeerLib.Utility {
             Logging.Logger.Log(message);
 
 		}
+
+        public static bool isLoadedSceneOneOf(params GameScenes[] scenes)
+        {
+            foreach (GameScenes g in scenes)
+            {
+                if (HighLogic.LoadedScene == g)
+                    return true;
+            }
+            return false;
+        }
 
 	}
 }
